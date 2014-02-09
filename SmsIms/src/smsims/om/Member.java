@@ -13,11 +13,12 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 @Entity
 @Table(name = "member_details")
 public class Member {
+    
     @Id @GeneratedValue
     private Integer id;
     

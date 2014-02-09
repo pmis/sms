@@ -6,9 +6,17 @@
 
 package smsims.member;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import smsims.db.DbOperation;
+import smsims.om.Member;
+
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 public class EditMember extends javax.swing.JPanel {
 
@@ -31,8 +39,8 @@ public class EditMember extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jtf_searchMember = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        js_searchMember = new javax.swing.JButton();
+        jtable_members = new javax.swing.JTable();
+        jb_searchMember = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -46,7 +54,7 @@ public class EditMember extends javax.swing.JPanel {
 
         jLabel1.setText("Search by Name");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtable_members.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -65,20 +73,25 @@ public class EditMember extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
-            jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(50);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(50);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(50);
+        jScrollPane1.setViewportView(jtable_members);
+        if (jtable_members.getColumnModel().getColumnCount() > 0) {
+            jtable_members.getColumnModel().getColumn(0).setMinWidth(30);
+            jtable_members.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jtable_members.getColumnModel().getColumn(0).setMaxWidth(30);
+            jtable_members.getColumnModel().getColumn(2).setMinWidth(100);
+            jtable_members.getColumnModel().getColumn(2).setPreferredWidth(100);
+            jtable_members.getColumnModel().getColumn(2).setMaxWidth(100);
+            jtable_members.getColumnModel().getColumn(3).setMinWidth(50);
+            jtable_members.getColumnModel().getColumn(3).setPreferredWidth(50);
+            jtable_members.getColumnModel().getColumn(3).setMaxWidth(50);
         }
 
-        js_searchMember.setText("Search");
+        jb_searchMember.setText("Search");
+        jb_searchMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_searchMemberActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Name");
 
@@ -153,7 +166,7 @@ public class EditMember extends javax.swing.JPanel {
                             .addGap(18, 18, 18)
                             .addComponent(jtf_searchMember, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(js_searchMember))))
+                            .addComponent(jb_searchMember))))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -163,7 +176,7 @@ public class EditMember extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jtf_searchMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(js_searchMember))
+                    .addComponent(jb_searchMember))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -171,6 +184,27 @@ public class EditMember extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jb_searchMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchMemberActionPerformed
+        String searchCode = jtf_searchMember.getText();
+        if (jtf_searchMember.getText() == null || jtf_searchMember.getText().equals("")) {            
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter name or part of it to search", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }        
+        DbOperation dbOperation = new DbOperation();
+        List<Member> members = dbOperation.getMembers(searchCode);
+        DefaultTableModel tableColumnModel = (DefaultTableModel)jtable_members.getModel();
+        String data[] = new String[5];
+        int i = 0;
+        
+        for (Member member : members){
+            data[0] = member.getId().toString();
+            data[1] = member.getName();
+            data[2] = member.getDepartment();
+            tableColumnModel.insertRow(i, data);
+            i++;
+        }
+    }//GEN-LAST:event_jb_searchMemberActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -180,11 +214,11 @@ public class EditMember extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton jb_deleteMember;
     private javax.swing.JButton jb_disableMember;
+    private javax.swing.JButton jb_searchMember;
     private javax.swing.JButton jb_updateMember;
-    private javax.swing.JButton js_searchMember;
+    private javax.swing.JTable jtable_members;
     private javax.swing.JTextField jtf_memberDepartment;
     private javax.swing.JTextField jtf_memberName;
     private javax.swing.JTextField jtf_memberTpNumber;

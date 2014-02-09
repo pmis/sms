@@ -14,7 +14,7 @@ import smsims.om.Member;
 
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 public class NewMember extends javax.swing.JPanel {
 

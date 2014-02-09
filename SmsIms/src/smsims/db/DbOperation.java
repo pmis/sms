@@ -6,8 +6,10 @@
 
 package smsims.db;
 
+import java.util.List;
 import java.util.Properties;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,7 +20,7 @@ import smsims.om.Member;
 
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 public class DbOperation {
     private static SessionFactory sessionFactory = null;  
@@ -70,5 +72,36 @@ public class DbOperation {
         }
     }
     
+    public List getMembers(String name) {
+        Session session = null;
+        Transaction tx = null;
+        List<Member> list;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();            
+            
+            // Saving to the database
+            Query query = session.createQuery("FROM Member WHERE name = :givenName ");
+            query.setParameter("givenName", name);
+            list = query.list();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return list;
+    }
         
 }

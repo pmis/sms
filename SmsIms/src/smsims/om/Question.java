@@ -8,7 +8,7 @@ package smsims.om;
 
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 public class Question {
     

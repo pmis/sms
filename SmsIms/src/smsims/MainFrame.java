@@ -8,7 +8,7 @@ package smsims;
 
 /**
  *
- * @author Lasith.Chandrasekara
+ * @author Lasith
  */
 public class MainFrame extends javax.swing.JFrame {
     
