@@ -6,7 +6,6 @@
 
 package smsims;
 
-import smsims.member.EditMember3;
 
 /**
  *

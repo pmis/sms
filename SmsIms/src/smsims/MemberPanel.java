@@ -9,7 +9,6 @@ package smsims;
 import java.awt.Color;
 import javax.swing.JPanel;
 import smsims.member.EditMember;
-import smsims.member.EditMember3;
 import smsims.member.NewMember;
 
 /**
