@@ -9,6 +9,7 @@ package smsims;
 import java.awt.Color;
 import javax.swing.JPanel;
 import smsims.member.EditMember;
+import smsims.member.EditMember3;
 import smsims.member.NewMember;
 
 /**
@@ -86,14 +87,14 @@ public class MemberPanel extends javax.swing.JPanel {
             .addGroup(jp_memberMainLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(565, Short.MAX_VALUE))
         );
         jp_memberMainLayout.setVerticalGroup(
             jp_memberMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp_memberMainLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addComponent(jLabel1)
-                .addContainerGap(342, Short.MAX_VALUE))
+                .addContainerGap(254, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -102,10 +103,10 @@ public class MemberPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jp_memberMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jp_member_tools, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jp_member_tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jp_memberMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,14 +115,14 @@ public class MemberPanel extends javax.swing.JPanel {
                 .addComponent(jp_member_tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jp_memberMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_newMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_newMemberActionPerformed
            NewMember newMember = new NewMember();
            newMember.setLocation(0, 00);
-           newMember.setSize(800, 600);
+           newMember.setSize(1800, 1600);
            jp_memberMain.removeAll();
            jp_memberMain.add(newMember);
            jp_memberMain.revalidate();
@@ -131,7 +132,7 @@ public class MemberPanel extends javax.swing.JPanel {
     private void jb_editMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_editMemberActionPerformed
            EditMember editMember = new EditMember();
            editMember.setLocation(0, 00);
-           editMember.setSize(800, 1500);
+           editMember.setSize(1800, 1600);
            jp_memberMain.removeAll();
            jp_memberMain.add(editMember);
            jp_memberMain.revalidate();

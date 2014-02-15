@@ -6,6 +6,8 @@
 
 package smsims;
 
+import smsims.member.EditMember3;
+
 /**
  *
  * @author Lasith
@@ -13,6 +15,7 @@ package smsims;
 public class MainFrame extends javax.swing.JFrame {
     
     MemberPanel memberPanel = new MemberPanel();
+    SmsPanel smsPannel = new SmsPanel();
 
     /**
      * Creates new form MainFrame
@@ -33,6 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jb_manageMembers = new javax.swing.JButton();
         jb_manageQuestions = new javax.swing.JButton();
+        jb_manageSms = new javax.swing.JButton();
         jp_mainPannel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -49,6 +53,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         jb_manageQuestions.setText("Manage Questions");
 
+        jb_manageSms.setText("Manage SMS");
+        jb_manageSms.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_manageSmsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -58,13 +69,16 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jb_manageMembers, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jb_manageQuestions, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jb_manageSms, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jb_manageSms, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                     .addComponent(jb_manageQuestions, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
                     .addComponent(jb_manageMembers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -80,11 +94,11 @@ public class MainFrame extends javax.swing.JFrame {
         jp_mainPannel.setLayout(jp_mainPannelLayout);
         jp_mainPannelLayout.setHorizontalGroup(
             jp_mainPannelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
         jp_mainPannelLayout.setVerticalGroup(
             jp_mainPannelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 328, Short.MAX_VALUE)
+            .addGap(0, 360, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -94,9 +108,9 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jp_mainPannel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jp_mainPannel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,7 +127,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jb_manageMembersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_manageMembersActionPerformed
         memberPanel.setLocation(0, 00);
-        memberPanel.setSize(800, 600);
+        memberPanel.setSize(1800, 1600);
         jp_mainPannel.removeAll();
         jp_mainPannel.add(memberPanel);
         jp_mainPannel.revalidate();
@@ -123,6 +137,15 @@ public class MainFrame extends javax.swing.JFrame {
     private void jp_mainPannelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jp_mainPannelMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jp_mainPannelMouseClicked
+
+    private void jb_manageSmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_manageSmsActionPerformed
+        smsPannel.setLocation(0, 00);
+        smsPannel.setSize(1800, 1600);
+        jp_mainPannel.removeAll();
+        jp_mainPannel.add(smsPannel);
+        jp_mainPannel.revalidate();
+        jp_mainPannel.repaint(); 
+    }//GEN-LAST:event_jb_manageSmsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -163,6 +186,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jb_manageMembers;
     private javax.swing.JButton jb_manageQuestions;
+    private javax.swing.JButton jb_manageSms;
     private javax.swing.JPanel jp_mainPannel;
     // End of variables declaration//GEN-END:variables
 }

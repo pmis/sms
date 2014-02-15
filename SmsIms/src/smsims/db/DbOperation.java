@@ -75,7 +75,7 @@ public class DbOperation {
     public List getMembers(String name) {
         Session session = null;
         Transaction tx = null;
-        List<Member> list;
+        List<Member> list = null;
          
         try {
             session = sessionFactory.openSession();
@@ -95,7 +95,7 @@ public class DbOperation {
             // Rolling back the changes to make the data consistent in case of any failure 
             // in between multiple database write operations.
             tx.rollback();
-            throw ex;
+//            throw ex;
         } finally{
             if(session != null) {
                 session.close();
