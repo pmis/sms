@@ -6,10 +6,18 @@
 
 package smsims;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
 import smsCore.GSMConnect;
+import smsCore.MessageResult;
+import smsCore.MessageSeperator;
 
 /**
  *
@@ -141,6 +149,24 @@ public class SmsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
+        //log creating part....
+        try 
+        {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            Calendar cal = Calendar.getInstance();
+            BufferedWriter out = new BufferedWriter(new FileWriter("logs\\smslog--" + dateFormat.format(cal.getTime()) + ".txt"));
+//            out.write("--------------------------------------------------------------Date and Time(" + dateFormat.format(cal.getTime()) + ") --------------------------------------------------------------");
+//            out.newLine();
+//            out.newLine();
+//            out.newLine();
+//            out.newLine();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            System.out.println("Cannot find the log file location");
+        }
+        //sms sending part...
         try 
         {
             String smsMessage = smsText.getText();
@@ -195,7 +221,40 @@ public class SmsPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
         
-        
+        //sms reading part...
+        try
+        {
+            GSMConnect gsm = GSMConnect.getInstace();
+            gsm.checkStatus();
+            Thread.sleep(50000);
+            gsm.sendMessage();
+            Thread.sleep(50000);
+            gsm.selecttheMemory();
+            Thread.sleep(50000); 
+            while(true)
+            {
+                String tempString = gsm.getoutputString().toString();
+                gsm.listSmsFromMemory();
+                Thread.sleep(20000);
+                String afterReadingSms = gsm.getoutputString().toString();
+                String allMessageString = afterReadingSms.substring(tempString.length());
+                MessageSeperator me = new MessageSeperator(allMessageString) ;
+                List<MessageResult> messageResultList = me.getSeperatedMessage();
+                //TO Do db save part ...
+                for (MessageResult messageResult : messageResultList)
+                {
+                    System.out.println(messageResult.toString());
+                }
+                for (MessageResult messageResult : messageResultList)
+                {
+                    gsm.deleteASMS(messageResult.getIndex());
+                }
+            }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+            }
        
         
         

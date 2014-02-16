@@ -169,32 +169,32 @@ public class GSMConnect implements SerialPortEventListener,
         send(message + '\032' + "\r\n");
     }
 
-    void readSMS() {
+    public void readSMS() {
         
         send("AT+CMGR=0\r\n");
     }
     
-    void listSmsFromMemory(){
+    public void listSmsFromMemory(){
         
         
         send("AT+CMGL=\"ALL\"\r\n");
     }
     
-    void selecttheMemory(){
+    public void selecttheMemory(){
         send("AT+CPMS=\"SM\"\r\n");
     }
 
-    void deleteAll() {
+    public void deleteAll() {
 //        send("AT+CMGD=\"ALL\"\r\n");
         send("AT+CMGD=1,25\r\n");
     }
     
-    void deleteASMS(String index)
+    public void deleteASMS(String index)
     {
         send("AT+CMGD="+index+"\r\n");
     }
     
-    void deleteSms() {
+    public void deleteSms() {
         try {
             send("AT+CMGD=0\r\n");
             Thread.sleep(500);
