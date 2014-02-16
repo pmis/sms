@@ -103,5 +103,37 @@ public class DbOperation {
         }
        return list;
     }
+    
+    public Member getMemberByEmployeeCode(String empCode) throws Exception {
+        Session session = null;
+        Transaction tx = null;
+        List<Member> list = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();            
+            
+            // Saving to the database
+            Query query = session.createQuery("FROM Member WHERE empCode = :givenEmpCode ");
+            query.setParameter("givenEmpCode", empCode);
+            list = query.list();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return list.get(0);
+    }
         
 }

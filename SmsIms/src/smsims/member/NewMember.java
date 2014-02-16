@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import smsims.db.DbOperation;
 import smsims.om.Member;
+import smsims.om.MemberStatus;
 
 /**
  *
@@ -23,6 +24,7 @@ public class NewMember extends javax.swing.JPanel {
      */
     public NewMember() {
         initComponents();
+        loadValues();
     }
 
     /**
@@ -48,6 +50,8 @@ public class NewMember extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jtf_empCode = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jcb_member_status = new javax.swing.JComboBox();
 
         jLabel1.setText("Name");
 
@@ -77,6 +81,8 @@ public class NewMember extends javax.swing.JPanel {
 
         jLabel6.setText("Emp code");
 
+        jLabel7.setText("Status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,15 +100,22 @@ public class NewMember extends javax.swing.JPanel {
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtf_mname, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jtf_empCode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(45, 45, 45)
-                                .addComponent(jLabel2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jtf_empCode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(45, 45, 45)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel7)))
+                                    .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(44, 44, 44)
-                                .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jcb_member_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(63, 63, 63)
                         .addComponent(jb_saveMember)
@@ -129,10 +142,12 @@ public class NewMember extends javax.swing.JPanel {
                             .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
                     .addComponent(jLabel1))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7)
+                    .addComponent(jcb_member_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,13 +156,18 @@ public class NewMember extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jb_saveMember)
                     .addComponent(jb_clearMember))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_saveMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_saveMemberActionPerformed
-        if(!validateFields()) {
-            return;
+        try {
+            if(!validateFields()) {
+                return;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
+            javax.swing.JOptionPane.showMessageDialog(this, "Member not saved." + ex.getMessage(), "Error", 1);
         }
         DbOperation dbOperation = new DbOperation();
         String memberDepatrment = jc_department.getSelectedItem().toString();
@@ -160,19 +180,26 @@ public class NewMember extends javax.swing.JPanel {
         member.setDepartment(memberDepatrment);
         member.setSite(memberSite);
         member.setMgtLevel(memberMgtLevel);
+        member.setEmpCode(jtf_empCode.getText());
+        member.setStatus(jcb_member_status.getSelectedItem().toString());
         try {
             dbOperation.insertMember(member);
             javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is saved.", "Alert", 1);
         } catch (Exception ex) {
             Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
-            javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is not saved.", "Alert", 1);
+            javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is not saved.", "Error", 1);
         }
     }//GEN-LAST:event_jb_saveMemberActionPerformed
 
-    private boolean validateFields() {
+    private boolean validateFields() throws Exception {
         boolean isSuccess = true;
         String memberDepatrment = jc_department.getSelectedItem().toString();
+        DbOperation dbOperation = new DbOperation();
         
+        if (jtf_empCode.getText() == null || jtf_empCode.getText().equals("")) {            
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter Empoyee code", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         if (jtf_mname.getText() == null || jtf_mname.getText().equals("")) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter name", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -182,6 +209,13 @@ public class NewMember extends javax.swing.JPanel {
         }
         if (memberDepatrment == null || memberDepatrment.equals("")) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter department", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        //We shouldn't allow to insert same emp code twise        
+        Member member = dbOperation.getMemberByEmployeeCode(jtf_empCode.getText());
+        if (member != null) {            
+            javax.swing.JOptionPane.showMessageDialog(this, "Member with the givem emp code is exsits", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return isSuccess;
@@ -202,6 +236,12 @@ public class NewMember extends javax.swing.JPanel {
         }
         return isSuccess;
     }
+    
+    private void loadValues() {
+        for (MemberStatus status : MemberStatus.values()) {            
+            jcb_member_status.addItem(status);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -210,11 +250,13 @@ public class NewMember extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JButton jb_clearMember;
     private javax.swing.JButton jb_saveMember;
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
+    private javax.swing.JComboBox jcb_member_status;
     private javax.swing.JTextField jtf_empCode;
     private javax.swing.JTextField jtf_mname;
     private javax.swing.JTextField jtf_tpNumber;

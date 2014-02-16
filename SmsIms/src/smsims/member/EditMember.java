@@ -9,8 +9,6 @@ package smsims.member;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import smsims.db.DbOperation;
 import smsims.om.Member;
 
@@ -37,10 +35,9 @@ public class EditMember extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jtf_searchEmpCode = new javax.swing.JTextField();
+        jtf_searchName = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtable_members = new javax.swing.JTable();
-        jb_searchEmpCode = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -52,24 +49,25 @@ public class EditMember extends javax.swing.JPanel {
         jb_deleteMember = new javax.swing.JButton();
         jb_disableMember = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jtf_searchName = new javax.swing.JTextField();
+        jb_searchEmpCode = new javax.swing.JButton();
+        jtf_searchEmpCode = new javax.swing.JTextField();
         jb_searchName = new javax.swing.JButton();
 
         jLabel1.setText("Emp Code");
 
         jtable_members.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Name", "Department", "Enable"
+                "Emp Code", "Name", "Department", "Site", "Mgt Level", "Enable"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -78,25 +76,31 @@ public class EditMember extends javax.swing.JPanel {
         });
         jtable_members.setMinimumSize(new java.awt.Dimension(1950, 64));
         jtable_members.setPreferredSize(new java.awt.Dimension(1255, 64));
-        jScrollPane1.setViewportView(jtable_members);
-        if (jtable_members.getColumnModel().getColumnCount() > 0) {
-            jtable_members.getColumnModel().getColumn(0).setMinWidth(30);
-            jtable_members.getColumnModel().getColumn(0).setPreferredWidth(30);
-            jtable_members.getColumnModel().getColumn(0).setMaxWidth(30);
-            jtable_members.getColumnModel().getColumn(2).setMinWidth(100);
-            jtable_members.getColumnModel().getColumn(2).setPreferredWidth(100);
-            jtable_members.getColumnModel().getColumn(2).setMaxWidth(100);
-            jtable_members.getColumnModel().getColumn(3).setMinWidth(50);
-            jtable_members.getColumnModel().getColumn(3).setPreferredWidth(50);
-            jtable_members.getColumnModel().getColumn(3).setMaxWidth(50);
-        }
-
-        jb_searchEmpCode.setText("Search");
-        jb_searchEmpCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jb_searchEmpCodeActionPerformed(evt);
+        jtable_members.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtable_membersMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(jtable_members);
+        if (jtable_members.getColumnModel().getColumnCount() > 0) {
+            jtable_members.getColumnModel().getColumn(0).setMinWidth(40);
+            jtable_members.getColumnModel().getColumn(0).setPreferredWidth(70);
+            jtable_members.getColumnModel().getColumn(0).setMaxWidth(100);
+            jtable_members.getColumnModel().getColumn(1).setMinWidth(150);
+            jtable_members.getColumnModel().getColumn(1).setPreferredWidth(200);
+            jtable_members.getColumnModel().getColumn(2).setMinWidth(40);
+            jtable_members.getColumnModel().getColumn(2).setPreferredWidth(80);
+            jtable_members.getColumnModel().getColumn(2).setMaxWidth(110);
+            jtable_members.getColumnModel().getColumn(3).setMinWidth(40);
+            jtable_members.getColumnModel().getColumn(3).setPreferredWidth(70);
+            jtable_members.getColumnModel().getColumn(3).setMaxWidth(100);
+            jtable_members.getColumnModel().getColumn(4).setMinWidth(40);
+            jtable_members.getColumnModel().getColumn(4).setPreferredWidth(70);
+            jtable_members.getColumnModel().getColumn(4).setMaxWidth(100);
+            jtable_members.getColumnModel().getColumn(5).setMinWidth(40);
+            jtable_members.getColumnModel().getColumn(5).setPreferredWidth(70);
+            jtable_members.getColumnModel().getColumn(5).setMaxWidth(100);
+        }
 
         jLabel2.setText("Name");
 
@@ -154,7 +158,19 @@ public class EditMember extends javax.swing.JPanel {
 
         jLabel5.setText("Name");
 
+        jb_searchEmpCode.setText("Search");
+        jb_searchEmpCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_searchEmpCodeActionPerformed(evt);
+            }
+        });
+
         jb_searchName.setText("Search");
+        jb_searchName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_searchNameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -162,17 +178,17 @@ public class EditMember extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jb_searchEmpCode)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtf_searchName, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtf_searchName)
                         .addGap(18, 18, 18)
                         .addComponent(jb_searchName))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,10 +201,10 @@ public class EditMember extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jb_searchEmpCode)
-                    .addComponent(jLabel5)
                     .addComponent(jtf_searchName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(jb_searchEmpCode)
+                    .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jb_searchName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,9 +214,9 @@ public class EditMember extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jb_searchEmpCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchEmpCodeActionPerformed
-        String searchCode = jtf_searchEmpCode.getText();
-        if (jtf_searchEmpCode.getText() == null || jtf_searchEmpCode.getText().equals("")) {            
+    private void jb_searchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchNameActionPerformed
+        String searchCode = jtf_searchName.getText();
+        if (jtf_searchName.getText() == null || jtf_searchName.getText().equals("")) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter name or part of it to search", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }        
@@ -208,16 +224,29 @@ public class EditMember extends javax.swing.JPanel {
         List<Member> members = dbOperation.getMembers(searchCode);
         DefaultTableModel tableColumnModel = (DefaultTableModel)jtable_members.getModel();
         String data[] = new String[5];
-        int i = 0;
+        tableColumnModel.setRowCount(0);
         
+        int i = 0;
         for (Member member : members){
-            data[0] = member.getId().toString();
+            data[0] = member.getEmpCode();
             data[1] = member.getName();
             data[2] = member.getDepartment();
+            data[3] = member.getSite();
+            data[4] = member.getMgtLevel();
+            //data[5] = m;
             tableColumnModel.insertRow(i, data);
             i++;
         }
+    }//GEN-LAST:event_jb_searchNameActionPerformed
+
+    private void jb_searchEmpCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchEmpCodeActionPerformed
+        
     }//GEN-LAST:event_jb_searchEmpCodeActionPerformed
+
+    private void jtable_membersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtable_membersMouseClicked
+        int row = jtable_members.rowAtPoint(evt.getPoint());
+        //int row = 
+    }//GEN-LAST:event_jtable_membersMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
