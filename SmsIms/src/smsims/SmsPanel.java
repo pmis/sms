@@ -6,6 +6,11 @@
 
 package smsims;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.comm.CommDriver;
+import smsCore.GSMConnect;
+
 /**
  *
  * @author Lasith.Chandrasekara
@@ -29,7 +34,7 @@ public class SmsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        smsText = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -42,9 +47,9 @@ public class SmsPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jc_mgtLevel = new javax.swing.JComboBox();
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        smsText.setColumns(20);
+        smsText.setRows(5);
+        jScrollPane1.setViewportView(smsText);
 
         jLabel1.setText("Message");
 
@@ -57,6 +62,11 @@ public class SmsPanel extends javax.swing.JPanel {
         jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Sites", "CMB", "Galle" }));
 
         jb_send.setText("Send SMS");
+        jb_send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_sendActionPerformed(evt);
+            }
+        });
 
         jb_clear.setText("Clear");
 
@@ -130,6 +140,66 @@ public class SmsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
+        try 
+        {
+            String smsMessage = smsText.getText();
+            String[] phoneNumbers = {"+94719028959", "+94712638139","+94788370502"};
+            
+            GSMConnect gsm = GSMConnect.getInstace();
+            gsm.checkStatus();
+            Thread.sleep(50000);
+            gsm.sendMessage();
+            Thread.sleep(50000);
+            for (String phoneNo : phoneNumbers)
+            {
+                if (smsMessage.length()<=155)
+                {
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(smsMessage);
+                    Thread.sleep(3000);
+                }
+                else if (smsMessage.length()>=156 && smsMessage.length()<=310)
+                {
+                    String messag1 = smsMessage.substring(0, 155);
+                    String messag2 = smsMessage.substring(156);
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(messag1);
+                    Thread.sleep(3000);
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(messag2);
+                    Thread.sleep(3000);
+                }
+                else
+                {
+                    String messag1 = smsMessage.substring(0, 155);
+                    String messag2 = smsMessage.substring(156,310);
+                    String message3 = smsMessage.substring(311);
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(messag1);
+                    Thread.sleep(3000);
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(messag2);
+                    Thread.sleep(3000);
+                    gsm.sendPhoneNu(phoneNo);
+                    gsm.sendString(message3);
+                    Thread.sleep(3000);
+                }
+            }
+            
+            Thread.sleep(50000);
+            gsm.hangup();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+       
+        
+        
+        
+    }//GEN-LAST:event_jb_sendActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -138,12 +208,12 @@ public class SmsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton jb_clear;
     private javax.swing.JButton jb_send;
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
     private javax.swing.JCheckBox jcb_responce_required;
+    private javax.swing.JTextArea smsText;
     // End of variables declaration//GEN-END:variables
 }

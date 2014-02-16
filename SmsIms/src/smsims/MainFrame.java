@@ -6,6 +6,9 @@
 
 package smsims;
 
+import javax.comm.CommDriver;
+import smsCore.GSMConnect;
+
 
 /**
  *
@@ -21,6 +24,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        driverInitialize();
     }
 
     /**
@@ -195,4 +199,37 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jb_manageSms;
     private javax.swing.JPanel jp_mainPannel;
     // End of variables declaration//GEN-END:variables
+
+    private void driverInitialize() {
+        
+        String driverName = "com.sun.comm.Win32Driver";
+        try 
+        {
+            CommDriver commdriver = (CommDriver) Class.forName(driverName).newInstance();
+            commdriver.initialize();
+        } 
+        catch (Exception e2) 
+        {
+            System.out.println("Cannot initalize widows driver");
+            e2.printStackTrace();
+        }
+        
+        GSMConnect gsm = GSMConnect.getInstace();
+        if (gsm.init()) 
+        {
+            try 
+            {
+                gsm.connect();
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Card Connection Unsuccessfull");
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Can't Connect to the port");
+        }
+    }
 }
