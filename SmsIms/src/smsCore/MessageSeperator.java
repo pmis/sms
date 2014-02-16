@@ -4,6 +4,7 @@
  */
 package smsCore;
 
+import smsims.om.MessageResult;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -17,6 +17,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import smsims.om.Member;
+import smsims.om.MessageResult;
 
 /**
  *
@@ -134,6 +135,34 @@ public class DbOperation {
             }
         }
        return list;
+    }
+    
+    public void insertMessageResult(MessageResult messageResult) throws Exception{
+        Session session = null;
+        Transaction tx = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();            
+            
+            // Saving to the database
+            session.saveOrUpdate(messageResult);
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
     }
         
 }

@@ -16,8 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
 import smsCore.GSMConnect;
-import smsCore.MessageResult;
+import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
+import smsims.db.DbOperation;
 
 /**
  *
@@ -230,6 +231,8 @@ public class SmsPanel extends javax.swing.JPanel {
     }
     
     private void readSms() {
+        DbOperation dbOperation = new DbOperation();
+        
         //sms reading part...
         try
         {
@@ -254,6 +257,9 @@ public class SmsPanel extends javax.swing.JPanel {
                 //TODO save messageResultList in db
                 for (MessageResult messageResult : messageResultList)
                 {
+                    //Save in the db
+                    dbOperation.insertMessageResult(messageResult);
+                    
                     System.out.println(messageResult.toString());
                 }
                 for (MessageResult messageResult : messageResultList)

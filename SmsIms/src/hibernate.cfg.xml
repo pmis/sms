@@ -16,5 +16,6 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
          
         <mapping class="smsims.om.Member"/>
+        <mapping class="smsims.om.MessageResult"/>
     </session-factory>
 </hibernate-configuration>
