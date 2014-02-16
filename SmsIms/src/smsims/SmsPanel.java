@@ -166,7 +166,14 @@ public class SmsPanel extends javax.swing.JPanel {
             e.printStackTrace();
             System.out.println("Cannot find the log file location");
         }
-        //sms sending part...
+
+        sendSms();
+        
+        readSms();
+    }//GEN-LAST:event_jb_sendActionPerformed
+    
+    private void sendSms() {
+                //sms sending part...
         try 
         {
             String smsMessage = smsText.getText();
@@ -220,7 +227,9 @@ public class SmsPanel extends javax.swing.JPanel {
         {
             e.printStackTrace();
         }
-        
+    }
+    
+    private void readSms() {
         //sms reading part...
         try
         {
@@ -233,6 +242,7 @@ public class SmsPanel extends javax.swing.JPanel {
             Thread.sleep(50000); 
             while(true)
             {
+                //TODO how much time we shoud run
                 String tempString = gsm.getoutputString().toString();
                 gsm.listSmsFromMemory();
                 Thread.sleep(20000);
@@ -240,7 +250,8 @@ public class SmsPanel extends javax.swing.JPanel {
                 String allMessageString = afterReadingSms.substring(tempString.length());
                 MessageSeperator me = new MessageSeperator(allMessageString) ;
                 List<MessageResult> messageResultList = me.getSeperatedMessage();
-                //TO Do db save part ...
+                
+                //TODO save messageResultList in db
                 for (MessageResult messageResult : messageResultList)
                 {
                     System.out.println(messageResult.toString());
@@ -254,13 +265,8 @@ public class SmsPanel extends javax.swing.JPanel {
             } catch (Exception e) {
                 e.printStackTrace();
                 
-            }
-       
-        
-        
-        
-    }//GEN-LAST:event_jb_sendActionPerformed
-
+            }   
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

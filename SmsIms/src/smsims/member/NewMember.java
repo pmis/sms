@@ -6,10 +6,12 @@
 
 package smsims.member;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import smsims.db.DbOperation;
+import smsims.member.util.ValidationUtil;
 import smsims.om.Member;
 import smsims.om.MemberStatus;
 
@@ -161,20 +163,11 @@ public class NewMember extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_saveMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_saveMemberActionPerformed
-        try {
-            if(!validateFields()) {
-                return;
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
-            javax.swing.JOptionPane.showMessageDialog(this, "Member not saved." + ex.getMessage(), "Error", 1);
-        }
-        DbOperation dbOperation = new DbOperation();
+        Member member = new Member();
         String memberDepatrment = jc_department.getSelectedItem().toString();
         String memberSite = jc_site.getSelectedItem().toString();
         String memberMgtLevel = jc_mgtLevel.getSelectedItem().toString();
         
-        Member member = new Member();
         member.setName(jtf_mname.getText());
         member.setTpNumber(jtf_tpNumber.getText());
         member.setDepartment(memberDepatrment);
@@ -182,60 +175,26 @@ public class NewMember extends javax.swing.JPanel {
         member.setMgtLevel(memberMgtLevel);
         member.setEmpCode(jtf_empCode.getText());
         member.setStatus(jcb_member_status.getSelectedItem().toString());
+        
+        try {
+            if(!ValidationUtil.validateFields(member, this, false)) {
+                return;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
+            javax.swing.JOptionPane.showMessageDialog(this, "Member not saved." + ex.getMessage(), "Error", 1);
+        }
+        DbOperation dbOperation = new DbOperation();       
+
         try {
             dbOperation.insertMember(member);
             javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is saved.", "Alert", 1);
         } catch (Exception ex) {
             Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
-            javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is not saved.", "Error", 1);
+            javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is not saved." 
+                    + ex.getMessage(), "Error", 1);
         }
     }//GEN-LAST:event_jb_saveMemberActionPerformed
-
-    private boolean validateFields() throws Exception {
-        boolean isSuccess = true;
-        String memberDepatrment = jc_department.getSelectedItem().toString();
-        DbOperation dbOperation = new DbOperation();
-        
-        if (jtf_empCode.getText() == null || jtf_empCode.getText().equals("")) {            
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter Empoyee code", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (jtf_mname.getText() == null || jtf_mname.getText().equals("")) {            
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter name", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!validateTpNumber(jtf_tpNumber.getText())) {
-            return false;
-        }
-        if (memberDepatrment == null || memberDepatrment.equals("")) {            
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter department", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        
-        //We shouldn't allow to insert same emp code twise        
-        Member member = dbOperation.getMemberByEmployeeCode(jtf_empCode.getText());
-        if (member != null) {            
-            javax.swing.JOptionPane.showMessageDialog(this, "Member with the givem emp code is exsits", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return isSuccess;
-    }
-    
-    public boolean validateTpNumber(String tpNumber) {
-        boolean isSuccess = true;
-        try{
-            Integer.parseInt(tpNumber);
-        } catch (NumberFormatException e) {
-            isSuccess = false;
-        }
-        if (tpNumber.length() != 10){
-            isSuccess = false;
-        }
-        if (!isSuccess) {            
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return isSuccess;
-    }
     
     private void loadValues() {
         for (MemberStatus status : MemberStatus.values()) {            

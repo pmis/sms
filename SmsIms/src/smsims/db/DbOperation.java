@@ -104,7 +104,7 @@ public class DbOperation {
        return list;
     }
     
-    public Member getMemberByEmployeeCode(String empCode) throws Exception {
+    public List<Member> getMembersByEmployeeCode(String empCode) throws Exception {
         Session session = null;
         Transaction tx = null;
         List<Member> list = null;
@@ -133,7 +133,7 @@ public class DbOperation {
                 session.close();
             }
         }
-       return list.get(0);
+       return list;
     }
         
 }

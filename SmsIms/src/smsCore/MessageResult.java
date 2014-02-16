@@ -11,7 +11,11 @@ package smsCore;
 public class MessageResult {
     
     
-   private String index = "";
+   private String index = "";   
+   private String messageStatus = "";
+   private String phoneNumber = "";
+   private String senderDate = "";
+   private String smsContent = "";
 
     public String getIndex() {
         return index;
@@ -52,10 +56,7 @@ public class MessageResult {
     public void setSmsContent(String smsContent) {
         this.smsContent = smsContent;
     }
-   private String messageStatus = "";
-   private String phoneNumber = "";
-   private String senderDate = "";
-   private String smsContent = "";
+
 
     @Override
     public String toString() {
