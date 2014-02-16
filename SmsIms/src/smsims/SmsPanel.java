@@ -6,9 +6,6 @@
 
 package smsims;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.comm.CommDriver;
 import smsCore.GSMConnect;
 
 /**
