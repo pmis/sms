@@ -37,10 +37,10 @@ public class EditMember extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jtf_searchMember = new javax.swing.JTextField();
+        jtf_searchEmpCode = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtable_members = new javax.swing.JTable();
-        jb_searchMember = new javax.swing.JButton();
+        jb_searchEmpCode = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -51,8 +51,11 @@ public class EditMember extends javax.swing.JPanel {
         jb_updateMember = new javax.swing.JButton();
         jb_deleteMember = new javax.swing.JButton();
         jb_disableMember = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jtf_searchName = new javax.swing.JTextField();
+        jb_searchName = new javax.swing.JButton();
 
-        jLabel1.setText("Search by Name");
+        jLabel1.setText("Emp Code");
 
         jtable_members.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -88,10 +91,10 @@ public class EditMember extends javax.swing.JPanel {
             jtable_members.getColumnModel().getColumn(3).setMaxWidth(50);
         }
 
-        jb_searchMember.setText("Search");
-        jb_searchMember.addActionListener(new java.awt.event.ActionListener() {
+        jb_searchEmpCode.setText("Search");
+        jb_searchEmpCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jb_searchMemberActionPerformed(evt);
+                jb_searchEmpCodeActionPerformed(evt);
             }
         });
 
@@ -126,7 +129,7 @@ public class EditMember extends javax.swing.JPanel {
                     .addComponent(jb_updateMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jb_disableMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jb_deleteMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 218, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,45 +152,55 @@ public class EditMember extends javax.swing.JPanel {
                 .addContainerGap(53, Short.MAX_VALUE))
         );
 
+        jLabel5.setText("Name");
+
+        jb_searchName.setText("Search");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtf_searchMember, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jb_searchMember))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jb_searchEmpCode)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtf_searchName, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jb_searchName))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jtf_searchMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jb_searchMember))
-                .addGap(18, 18, 18)
+                    .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jb_searchEmpCode)
+                    .addComponent(jLabel5)
+                    .addComponent(jtf_searchName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jb_searchName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(38, 38, 38))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jb_searchMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchMemberActionPerformed
-        String searchCode = jtf_searchMember.getText();
-        if (jtf_searchMember.getText() == null || jtf_searchMember.getText().equals("")) {            
+    private void jb_searchEmpCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchEmpCodeActionPerformed
+        String searchCode = jtf_searchEmpCode.getText();
+        if (jtf_searchEmpCode.getText() == null || jtf_searchEmpCode.getText().equals("")) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter name or part of it to search", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }        
@@ -204,7 +217,7 @@ public class EditMember extends javax.swing.JPanel {
             tableColumnModel.insertRow(i, data);
             i++;
         }
-    }//GEN-LAST:event_jb_searchMemberActionPerformed
+    }//GEN-LAST:event_jb_searchEmpCodeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -212,16 +225,19 @@ public class EditMember extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jb_deleteMember;
     private javax.swing.JButton jb_disableMember;
-    private javax.swing.JButton jb_searchMember;
+    private javax.swing.JButton jb_searchEmpCode;
+    private javax.swing.JButton jb_searchName;
     private javax.swing.JButton jb_updateMember;
     private javax.swing.JTable jtable_members;
     private javax.swing.JTextField jtf_memberDepartment;
     private javax.swing.JTextField jtf_memberName;
     private javax.swing.JTextField jtf_memberTpNumber;
-    private javax.swing.JTextField jtf_searchMember;
+    private javax.swing.JTextField jtf_searchEmpCode;
+    private javax.swing.JTextField jtf_searchName;
     // End of variables declaration//GEN-END:variables
 }

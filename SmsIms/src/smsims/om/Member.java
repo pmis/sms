@@ -22,11 +22,17 @@ public class Member {
     @Id @GeneratedValue
     private Integer id;
     
+    private String empCode;
+    
     private String name;
     
     private String tpNumber;
     
     private String department;
+    
+    private String site;
+    
+    private String mgtLevel;
 
     public Integer getId() {
         return id;
@@ -76,6 +82,30 @@ public class Member {
      */
     public void setDepartment(String department) {
         this.department = department;
+    }
+    
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getMgtLevel() {
+        return mgtLevel;
+    }
+
+    public void setMgtLevel(String mgtLevel) {
+        this.mgtLevel = mgtLevel;
+    }    
+    
+    public String getEmpCode() {
+        return empCode;
+    }
+
+    public void setEmpCode(String empCode) {
+        this.empCode = empCode;
     }
     
 }
