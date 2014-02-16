@@ -74,6 +74,10 @@ public class EditMember extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
@@ -88,8 +92,9 @@ public class EditMember extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtable_members.setMaximumSize(new java.awt.Dimension(2147483647, 1440));
         jtable_members.setMinimumSize(new java.awt.Dimension(1950, 64));
-        jtable_members.setPreferredSize(new java.awt.Dimension(1255, 64));
+        jtable_members.setPreferredSize(new java.awt.Dimension(1255, 130));
         jtable_members.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtable_membersMouseClicked(evt);
@@ -232,7 +237,7 @@ public class EditMember extends javax.swing.JPanel {
                             .addComponent(jb_updateMember)
                             .addComponent(jb_disableMember)
                             .addComponent(jb_deleteMember))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 8, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,7 +247,7 @@ public class EditMember extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
-                        .addContainerGap(124, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         jLabel5.setText("Name");
@@ -294,10 +299,11 @@ public class EditMember extends javax.swing.JPanel {
                     .addComponent(jb_searchEmpCode)
                     .addComponent(jtf_searchEmpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jb_searchName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -309,7 +315,7 @@ public class EditMember extends javax.swing.JPanel {
         }        
         DbOperation dbOperation = new DbOperation();
         List<Member> members = dbOperation.getMembers(searchCode);
-        MemberUtil.loadMemberIntoTable(members, jtable_members);
+        MemberUtil.loadMembersIntoTable(members, jtable_members);
     }//GEN-LAST:event_jb_searchNameActionPerformed
 
     private void jb_searchEmpCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_searchEmpCodeActionPerformed
@@ -321,7 +327,7 @@ public class EditMember extends javax.swing.JPanel {
         DbOperation dbOperation = new DbOperation();
         try {
             List<Member> members = dbOperation.getMembersByEmployeeCode(searchCode);
-            MemberUtil.loadMemberIntoTable(members, jtable_members);
+            MemberUtil.loadMembersIntoTable(members, jtable_members);
         } catch (Exception ex) {
             Logger.getLogger(EditMember.class.getName()).log(Level.SEVERE, null, ex);
         }

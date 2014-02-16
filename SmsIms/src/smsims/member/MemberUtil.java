@@ -17,7 +17,7 @@ import smsims.om.Member;
  */
 public class MemberUtil {
 
-    public static void loadMemberIntoTable(List<Member> members, JTable jtable_members) {        
+    public static void loadMembersIntoTable(List<Member> members, JTable jtable_members) {        
         DefaultTableModel tableColumnModel = (DefaultTableModel)jtable_members.getModel();
         String data[] = new String[8];
         tableColumnModel.setRowCount(0);

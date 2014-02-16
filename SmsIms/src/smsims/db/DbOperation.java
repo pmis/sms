@@ -82,8 +82,8 @@ public class DbOperation {
             tx = session.beginTransaction();            
             
             // Saving to the database
-            Query query = session.createQuery("FROM Member WHERE name = :givenName ");
-            query.setParameter("givenName", name);
+            Query query = session.createQuery("FROM Member WHERE name LIKE :givenName ");
+            query.setParameter("givenName",  name + "%" );
             list = query.list();
              
             // Committing the change in the database.
@@ -114,8 +114,8 @@ public class DbOperation {
             tx = session.beginTransaction();            
             
             // Saving to the database
-            Query query = session.createQuery("FROM Member WHERE empCode = :givenEmpCode ");
-            query.setParameter("givenEmpCode", empCode);
+            Query query = session.createQuery("FROM Member WHERE empCode LIKE :givenEmpCode ");
+            query.setParameter("givenEmpCode", "%" + empCode + "%" );
             list = query.list();
              
             // Committing the change in the database.
