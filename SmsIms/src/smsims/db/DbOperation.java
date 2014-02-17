@@ -164,5 +164,37 @@ public class DbOperation {
             }
         }
     }
+    
+    public List getMessageResults(String phoneNumber) {
+        Session session = null;
+        Transaction tx = null;
+        List<MessageResult> list = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();            
+            
+            // Saving to the database
+            Query query = session.createQuery("FROM MessageResult WHERE phoneNumber = :givenPhNumber ");
+            query.setParameter("givenPhNumber",  phoneNumber + "%" );
+            list = query.list();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+//            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return list;
+    }
         
 }
