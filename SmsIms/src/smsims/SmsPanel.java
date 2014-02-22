@@ -8,6 +8,9 @@ package smsims;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,6 +18,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import smsCore.GSMConnect;
 import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
@@ -24,13 +30,15 @@ import smsims.db.DbOperation;
  *
  * @author Lasith.Chandrasekara
  */
-public class SmsPanel extends javax.swing.JPanel {
+public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
     /**
      * Creates new form SmsPanel
      */
     public SmsPanel() {
         initComponents();
+        smsText.getDocument().addDocumentListener(this);
+        messageSendingStausLabel.setVisible(false);
     }
 
     /**
@@ -51,10 +59,13 @@ public class SmsPanel extends javax.swing.JPanel {
         jc_site = new javax.swing.JComboBox();
         jb_send = new javax.swing.JButton();
         jb_clear = new javax.swing.JButton();
-        jcb_responce_required = new javax.swing.JCheckBox();
+        responce_required_checkbox = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         jc_mgtLevel = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        messagCountText = new javax.swing.JTextField();
+        messageSendingStausLabel = new javax.swing.JLabel();
 
         smsText.setColumns(20);
         smsText.setRows(5);
@@ -78,12 +89,21 @@ public class SmsPanel extends javax.swing.JPanel {
         });
 
         jb_clear.setText("Clear");
+        jb_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_clearActionPerformed(evt);
+            }
+        });
 
-        jcb_responce_required.setText("Require Response");
+        responce_required_checkbox.setText("Require Response");
 
         jLabel4.setText("Mgt Level");
 
         jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Levels", "FML", "SML", "TML" }));
+
+        jLabel5.setText("Character Count");
+
+        messagCountText.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,9 +120,14 @@ public class SmsPanel extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jcb_responce_required)
+                            .addComponent(responce_required_checkbox)
                             .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(messagCountText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(layout.createSequentialGroup()
@@ -113,9 +138,10 @@ public class SmsPanel extends javax.swing.JPanel {
                                         .addComponent(jb_send)
                                         .addGap(57, 57, 57)
                                         .addComponent(jb_clear)))
-                                .addGap(36, 36, 36)
-                                .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 86, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 7, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -126,7 +152,11 @@ public class SmsPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jLabel1))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(messagCountText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(22, 22, 22)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -140,12 +170,14 @@ public class SmsPanel extends javax.swing.JPanel {
                     .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
-                .addComponent(jcb_responce_required)
+                .addComponent(responce_required_checkbox)
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jb_send)
                     .addComponent(jb_clear))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -155,78 +187,188 @@ public class SmsPanel extends javax.swing.JPanel {
         {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             Calendar cal = Calendar.getInstance();
-            BufferedWriter out = new BufferedWriter(new FileWriter("logs\\smslog--" + dateFormat.format(cal.getTime()) + ".txt"));
-//            out.write("--------------------------------------------------------------Date and Time(" + dateFormat.format(cal.getTime()) + ") --------------------------------------------------------------");
-//            out.newLine();
-//            out.newLine();
-//            out.newLine();
-//            out.newLine();
+            out = new BufferedWriter(new FileWriter("logs\\smslog--" + dateFormat.format(cal.getTime()) + ".txt"));
+            out.write("--------------------------------------------------------------Date and Time(" + dateFormat.format(cal.getTime()) + ") --------------------------------------------------------------");
+            out.newLine();
+            out.newLine();
+            out.newLine();
+            out.newLine();
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            try 
+            {
+                out.write(errors.toString());
+                out.newLine();
+            } 
+            catch (IOException ex) 
+            {
+                e.printStackTrace();
+            }
             System.out.println("Cannot find the log file location");
         }
 
-        sendSms();
-        
-        readSms();
-    }//GEN-LAST:event_jb_sendActionPerformed
-    
-    private void sendSms() {
-                //sms sending part...
+        sendSms();       
+        boolean responseRequired = responce_required_checkbox.isSelected();       
+        if(responseRequired)
+        {
+            readSms();
+        }
         try 
         {
-            String smsMessage = smsText.getText();
-            String[] phoneNumbers = {"+94719028959", "+94712638139","+94788370502"};
-            
-            GSMConnect gsm = GSMConnect.getInstace();
-            gsm.checkStatus();
-            Thread.sleep(50000);
-            gsm.sendMessage();
-            Thread.sleep(50000);
-            for (String phoneNo : phoneNumbers)
+            out.close();
+        } 
+        catch (IOException ex) 
+        {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jb_sendActionPerformed
+
+    private void jb_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_clearActionPerformed
+   
+        smsText.setText("");
+    }//GEN-LAST:event_jb_clearActionPerformed
+    
+    private void sendSms() {
+       //sms sending part...
+        try 
+        {   
+            if (smsText.getText().length() != 0)
             {
+//                String messageStatusSting ="<html><FONT COLOR=RED><B>Message Sending ..... </B></FONT></html>";
+//                messageSendingStausLabel.setText(messageStatusSting);
+//                messageSendingStausLabel.setVisible(true);
+//                messageSendingStausLabel.setEnabled(true);
+//                jb_send.setEnabled(false);
+                String smsMessage = smsText.getText();
+                String[] phoneNumbers = {"+94719028959", "+94712638139","+94788370502"};
+                //message chracter count less than 155
+                String normalMessage ="";
+                //message character count between 155 and 310
+                String message1 ="";
+                String message2 = "";
+                //message charatcter count grether than 310
+                String message11="";
+                String message22="";
+                String message33="";
+            
                 if (smsMessage.length()<=155)
                 {
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(smsMessage);
-                    Thread.sleep(3000);
+                    normalMessage = smsMessage;
+                    out.write("Message character count is less than 155...");
+                    out.newLine();
+                    out.write("Message -> "+normalMessage);
+                    out.newLine();
                 }
                 else if (smsMessage.length()>=156 && smsMessage.length()<=310)
                 {
-                    String messag1 = smsMessage.substring(0, 155);
-                    String messag2 = smsMessage.substring(156);
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(messag1);
-                    Thread.sleep(3000);
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(messag2);
-                    Thread.sleep(3000);
+                    message1 = smsMessage.substring(0, 155);
+                    message2 = smsMessage.substring(154);
+                    out.write("Message character count betwenn 155 and 310...");
+                    out.newLine();
+                    out.write("Message 1 -> "+message1);
+                    out.newLine();
+                    out.write("Message 2 -> "+message2);
+                    out.newLine();     
                 }
                 else
                 {
-                    String messag1 = smsMessage.substring(0, 155);
-                    String messag2 = smsMessage.substring(156,310);
-                    String message3 = smsMessage.substring(311);
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(messag1);
-                    Thread.sleep(3000);
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(messag2);
-                    Thread.sleep(3000);
-                    gsm.sendPhoneNu(phoneNo);
-                    gsm.sendString(message3);
-                    Thread.sleep(3000);
+                    message11 = smsMessage.substring(0, 155);
+                    message22 = smsMessage.substring(154,310);
+                    message33 = smsMessage.substring(309);
+                    out.write("Message character count greather than 310...");
+                    out.newLine();
+                    out.write("Message 1 -> "+message11);
+                    out.newLine();
+                    out.write("Message 2 -> "+message22);
+                    out.newLine();
+                    out.write("Message 3 -> "+message33);
+                    out.newLine();                    
                 }
-            }
+                out.write("-------------------------------------Start Message Sending--------------------------------------------");
+                out.newLine();
+                out.newLine();
+                out.newLine();
+                GSMConnect gsm = GSMConnect.getInstace();
+                gsm.checkStatus();
+                Thread.sleep(50000);
+                gsm.sendMessage();
+                Thread.sleep(50000);
+                for (String phoneNo : phoneNumbers)
+                {
+                    if (smsMessage.length()<=155)
+                    {
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(normalMessage);
+                        Thread.sleep(3000);
+                        out.write("Message Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                    }
+                    else if (smsMessage.length()>=156 && smsMessage.length()<=310)
+                    {
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(message1);
+                        Thread.sleep(3000);
+                        out.write("Message 1 Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(message2);
+                        Thread.sleep(3000);
+                        out.write("Message 2 Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                    }
+                    else
+                    {
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(message11);
+                        Thread.sleep(3000);
+                        out.write("Message 1 Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(message22);
+                        Thread.sleep(3000);
+                        out.write("Message 2 Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                        gsm.sendPhoneNu(phoneNo);
+                        gsm.sendString(message33);
+                        Thread.sleep(3000);
+                        out.write("Message 3 Sent Successfully -> "+phoneNo);
+                        out.newLine();
+                    }
+                }
             
-            Thread.sleep(50000);
-            gsm.hangup();
-        } 
+                Thread.sleep(50000);
+                gsm.hangup();
+//                messageSendingStausLabel.setText("");
+//                messageSendingStausLabel.setVisible(false);
+//                jb_send.setEnabled(true);
+                out.write("-------------------------------------Finish Message Sending--------------------------------------------");
+                out.newLine();
+                out.newLine();
+                out.newLine();
+            } 
+            else
+            {
+                JOptionPane.showMessageDialog(null,"SMS Message is empty \n Can't send SMS..","SMS Sending Fail Warning",JOptionPane.WARNING_MESSAGE );
+            }
+        }
         catch (Exception e) 
         {
             e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            try 
+            {
+                out.write(errors.toString());
+                out.newLine();
+            } 
+            catch (IOException ex) 
+            {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -268,10 +410,23 @@ public class SmsPanel extends javax.swing.JPanel {
                 }
             }
 
-            } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            try 
+            {
+                out.write(errors.toString());
+                out.newLine();
+            } 
+            catch (IOException ex) 
+            {
                 e.printStackTrace();
+            }
                 
-            }   
+        }   
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -279,6 +434,7 @@ public class SmsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton jb_clear;
@@ -286,7 +442,44 @@ public class SmsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
-    private javax.swing.JCheckBox jcb_responce_required;
+    private javax.swing.JTextField messagCountText;
+    private javax.swing.JLabel messageSendingStausLabel;
+    private javax.swing.JCheckBox responce_required_checkbox;
     private javax.swing.JTextArea smsText;
     // End of variables declaration//GEN-END:variables
+    private static BufferedWriter out;
+
+    public static BufferedWriter getLog() 
+    {
+        return out;
+    }
+    
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        if (e.getDocument() == smsText.getDocument())
+        {
+           warn(); 
+        }       
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        if (e.getDocument() == smsText.getDocument())
+        {
+           warn(); 
+        }
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+       if (e.getDocument() == smsText.getDocument())
+        {
+           warn(); 
+        }
+    }
+    
+    public void warn() {
+     
+        messagCountText.setText(String.valueOf(smsText.getText().length()));
+  }
 }
