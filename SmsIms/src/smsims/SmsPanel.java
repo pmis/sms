@@ -244,7 +244,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                messageSendingStausLabel.setEnabled(true);
 //                jb_send.setEnabled(false);
                 String smsMessage = smsText.getText();
-                String[] phoneNumbers = {"+94719028959", "+94712638139","+94788370502"};
+                String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
                 //message chracter count less than 155
                 String normalMessage ="";
                 //message character count between 155 and 310
@@ -384,7 +384,12 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             gsm.sendMessage();
             Thread.sleep(50000);
             gsm.selecttheMemory();
-            Thread.sleep(50000); 
+            Thread.sleep(50000);
+            out.newLine();
+            out.newLine();
+            out.write("-------------------------------------Start Message Reading--------------------------------------------");
+            out.newLine();
+            out.newLine();
             while(true)
             {
                 //TODO how much time we shoud run
@@ -398,8 +403,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 
                 smsSaveInDb(messageResultList, dbOperation);
                 
-                deleteSmsFromSim(messageResultList, gsm);
+//                deleteSmsFromSim(messageResultList, gsm);
             }
+            
 
         } 
         catch (Exception e) 
@@ -436,7 +442,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             if (dbPhoneNumList.isEmpty())
             {
                 dbOperation.insertMessageResult(messageResult);
-                System.out.println(messageResult.toString());
+                out.write(messageResult.toString());
+                out.write("Adding DB Successfully...");
+                out.newLine();
             }
         }
     }
