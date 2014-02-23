@@ -28,6 +28,8 @@ import smsCore.GSMConnect;
 import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
 import smsims.db.DbOperation;
+import smsims.om.Member;
+import smsims.om.TypeUtil;
 
 /**
  *
@@ -81,9 +83,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel3.setText("Site");
 
-        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Departments", "Geo-Cycle", "HR" }));
+        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Departments", "Geo_Cycle", "HR" }));
 
-        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Sites", "CMB", "Galle" }));
+        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Sites", "CMB", "Galle" }));
 
         jb_send.setText("Send SMS");
         jb_send.addActionListener(new java.awt.event.ActionListener() {
@@ -103,7 +105,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel4.setText("Mgt Level");
 
-        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Levels", "FML", "SML", "TML" }));
+        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Levels", "FML", "SML", "TML" }));
 
         jLabel5.setText("Character Count");
 
@@ -199,6 +201,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
+
         //log creating part....
         try 
         {
@@ -249,7 +252,18 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         smsText.setText("");
     }//GEN-LAST:event_jb_clearActionPerformed
 
-    private File getSaveLocation()
+    private List<Member> getSelectedMembers() {
+        DbOperation dbOperation = new DbOperation();
+        
+        String depatment = jc_department.getSelectedItem().toString();
+        String mgtLevel = jc_mgtLevel.getSelectedItem().toString();
+        String site = jc_site.getSelectedItem().toString();
+        boolean isWhereAppended = false;
+        
+        return dbOperation.getSelectedMembers(depatment, mgtLevel, site);
+    }
+	
+	private File getSaveLocation()
     {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);  
@@ -305,6 +319,10 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                messageSendingStausLabel.setVisible(true);
 //                messageSendingStausLabel.setEnabled(true);
 //                jb_send.setEnabled(false);
+                
+                //Get members list according to the specified conditioned in the UI
+                List<Member> selectedMembers = getSelectedMembers();
+				
                 //TO DO need change the session Id..
                 sessionId = "001";
                 String smsMessage = smsText.getText();
@@ -462,7 +480,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 Thread.sleep(20000);
                 String afterReadingSms = gsm.getoutputString().toString();
                 String allMessageString = afterReadingSms.substring(tempString.length());
-                MessageSeperator me = new MessageSeperator(allMessageString,sessionId) ;
+                MessageSeperator me = new MessageSeperator(allMessageString, sessionId) ;
                 List<MessageResult> messageResultList = me.getSeperatedMessage();
                 
                 smsSaveInDb(messageResultList, dbOperation);
