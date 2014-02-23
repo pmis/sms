@@ -37,13 +37,17 @@ public class MessageSeperator {
                 {
                     System.out.println("Result Array....."+me);
                 }
-                MessageResult messageResult = new MessageResult();
-                messageResult.setIndex(messageResultArray[0]);
-                messageResult.setMessageStatus(messageResultArray[1]);
-                messageResult.setPhoneNumber(messageResultArray[2]);
-                messageResult.setSenderDate(messageResultArray[4].substring(1));
-                messageResult.setSmsContent(messageResultArray[5].substring(12));
-                messageResulList.add(messageResult);
+                if (messageResultArray.length >= 6)
+                {
+                    MessageResult messageResult = new MessageResult();
+                    messageResult.setIndex(messageResultArray[0]);
+                    messageResult.setMessageStatus(messageResultArray[1]);
+                    messageResult.setPhoneNumber(messageResultArray[2]);
+                    messageResult.setSenderDate(messageResultArray[4].substring(1));
+                    messageResult.setSmsContent(messageResultArray[5].substring(12));
+                    messageResulList.add(messageResult);   
+                }
+                
             }
             count ++;
         }
