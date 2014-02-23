@@ -503,7 +503,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         for (MessageResult messageResult : messageResultList)
         {
             //Save in the db
-            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber());
+            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber(),messageResult.getSessionId());
             if (dbPhoneNumList.isEmpty())
             {
                 dbOperation.insertMessageResult(messageResult);

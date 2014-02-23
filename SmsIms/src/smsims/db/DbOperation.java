@@ -165,7 +165,7 @@ public class DbOperation {
         }
     }
     
-    public List getMessageResults(String phoneNumber) {
+    public List getMessageResults(String phoneNumber, String sessionId) {
         Session session = null;
         Transaction tx = null;
         List<MessageResult> list = null;
