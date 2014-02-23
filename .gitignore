@@ -1,2 +1,4 @@
 /target
 /SmsIms/build
+/SmsIms/logs
+/SmsIms/smsims.db

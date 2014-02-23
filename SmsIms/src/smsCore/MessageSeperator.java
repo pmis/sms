@@ -15,13 +15,16 @@ import java.util.List;
 public class MessageSeperator {
     
     private String message;
+    private String sessionId;
     
-    public MessageSeperator(String message)
+    public MessageSeperator(String message,String sessionId)
     {
         this.message = message;
+        this.sessionId = sessionId;
         
     }
-    
+
+   
     public List<MessageResult> getSeperatedMessage()
     {
         String messageArray[] = message.split("\\+CMGL:") ;
@@ -38,11 +41,20 @@ public class MessageSeperator {
                 if (messageResultArray.length >= 6 && correctPhoneNum)
                 {
                     MessageResult messageResult = new MessageResult();
+                    messageResult.setSessionId(sessionId);
                     messageResult.setIndex(messageResultArray[0]);
                     messageResult.setMessageStatus(messageResultArray[1]);
                     messageResult.setPhoneNumber(phoneNum);
                     messageResult.setSenderDate(messageResultArray[4].substring(1));
-                    messageResult.setSmsContent(messageResultArray[5].substring(12).trim());
+                    String smsContent = messageResultArray[5].substring(12).trim();
+                    if (smsContent.endsWith("OK"))
+                    {
+                        messageResult.setSmsContent(smsContent.substring(0,smsContent.length()-2));
+                    }
+                    else
+                    {
+                        messageResult.setSmsContent(smsContent);
+                    }
                     messageResulList.add(messageResult); 
                     System.out.println("Added Successfully \n "+messageResult.toString());
                 }

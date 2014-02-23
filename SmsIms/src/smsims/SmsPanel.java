@@ -7,6 +7,8 @@
 package smsims;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -25,8 +28,6 @@ import smsCore.GSMConnect;
 import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
 import smsims.db.DbOperation;
-import smsims.om.Member;
-import smsims.om.TypeUtil;
 
 /**
  *
@@ -80,9 +81,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel3.setText("Site");
 
-        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Departments", "Geo_Cycle", "HR" }));
+        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Departments", "Geo-Cycle", "HR" }));
 
-        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Sites", "CMB", "Galle" }));
+        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Sites", "CMB", "Galle" }));
 
         jb_send.setText("Send SMS");
         jb_send.addActionListener(new java.awt.event.ActionListener() {
@@ -102,13 +103,18 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel4.setText("Mgt Level");
 
-        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Levels", "FML", "SML", "TML" }));
+        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Levels", "FML", "SML", "TML" }));
 
         jLabel5.setText("Character Count");
 
         messagCountText.setEditable(false);
 
         jb_export_result.setText("Export results");
+        jb_export_result.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_export_resultActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -193,7 +199,6 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
-
         //log creating part....
         try 
         {
@@ -244,17 +249,51 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         smsText.setText("");
     }//GEN-LAST:event_jb_clearActionPerformed
 
-    private List<Member> getSelectedMembers() {
-        DbOperation dbOperation = new DbOperation();
-        
-        String depatment = jc_department.getSelectedItem().toString();
-        String mgtLevel = jc_mgtLevel.getSelectedItem().toString();
-        String site = jc_site.getSelectedItem().toString();
-        boolean isWhereAppended = false;
-        
-        return dbOperation.getSelectedMembers(depatment, mgtLevel, site);
+    private File getSaveLocation()
+    {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);  
+        int result = chooser.showSaveDialog(this);
+        if (result == chooser.APPROVE_OPTION) 
+        { 
+            return chooser.getSelectedFile();
+        } 
+        else 
+        {
+            return null;
+        }
     }
+    
+    private void jb_export_resultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_export_resultActionPerformed
         
+       
+        PrintWriter file = null;
+        try 
+        {   
+            File fileDirectory = getSaveLocation();
+            if (fileDirectory != null)
+            {   
+                file = new PrintWriter(new File(fileDirectory,"sms_response.csv"));
+            }
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            ex.printStackTrace();
+        }
+        if (file != null)
+        {
+            DbOperation db = new DbOperation();
+            List<MessageResult> sessionMessageResults = db.getSessionMessageResults("001");
+        
+            for (MessageResult msgResult : sessionMessageResults)
+            {
+                file.write(msgResult.printCSV());
+            }
+        
+            file.close();   
+        }
+    }//GEN-LAST:event_jb_export_resultActionPerformed
+   
     private void sendSms() {
        //sms sending part...
         try 
@@ -266,10 +305,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                messageSendingStausLabel.setVisible(true);
 //                messageSendingStausLabel.setEnabled(true);
 //                jb_send.setEnabled(false);
-                
-                //Get members list according to the specified conditioned in the UI
-                List<Member> selectedMembers = getSelectedMembers();
-                
+                //TO DO need change the session Id..
+                sessionId = "001";
                 String smsMessage = smsText.getText();
                 String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
                 //message chracter count less than 155
@@ -425,7 +462,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 Thread.sleep(20000);
                 String afterReadingSms = gsm.getoutputString().toString();
                 String allMessageString = afterReadingSms.substring(tempString.length());
-                MessageSeperator me = new MessageSeperator(allMessageString) ;
+                MessageSeperator me = new MessageSeperator(allMessageString,sessionId) ;
                 List<MessageResult> messageResultList = me.getSeperatedMessage();
                 
                 smsSaveInDb(messageResultList, dbOperation);
@@ -453,10 +490,11 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         }   
     }
 
-    private void deleteSmsFromSim(List<MessageResult> messageResultList, GSMConnect gsm) {
+    private void deleteSmsFromSim(List<MessageResult> messageResultList, GSMConnect gsm) throws InterruptedException {
         for (MessageResult messageResult : messageResultList)
         {
             gsm.deleteASMS(messageResult.getIndex());
+            Thread.sleep(2000);
         }
     }
 
@@ -465,7 +503,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         for (MessageResult messageResult : messageResultList)
         {
             //Save in the db
-            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber(), "001");
+            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber(),messageResult.getSessionId());
             if (dbPhoneNumList.isEmpty())
             {
                 dbOperation.insertMessageResult(messageResult);
@@ -496,6 +534,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JTextArea smsText;
     // End of variables declaration//GEN-END:variables
     private static BufferedWriter out;
+    private String sessionId;
 
     public static BufferedWriter getLog() 
     {
