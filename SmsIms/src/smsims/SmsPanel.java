@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ import smsCore.GSMConnect;
 import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
 import smsims.db.DbOperation;
+import smsims.member.util.Registry;
 import smsims.om.Member;
 import smsims.om.TypeUtil;
 
@@ -64,7 +66,6 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         jc_department = new javax.swing.JComboBox();
         jc_site = new javax.swing.JComboBox();
         jb_send = new javax.swing.JButton();
-        jb_clear = new javax.swing.JButton();
         responce_required_checkbox = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
@@ -73,6 +74,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         messagCountText = new javax.swing.JTextField();
         messageSendingStausLabel = new javax.swing.JLabel();
         jb_export_result = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jtf_timeout = new javax.swing.JTextField();
 
         smsText.setColumns(20);
         smsText.setRows(5);
@@ -95,13 +98,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             }
         });
 
-        jb_clear.setText("Clear");
-        jb_clear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jb_clearActionPerformed(evt);
-            }
-        });
-
+        responce_required_checkbox.setSelected(true);
         responce_required_checkbox.setText("Require Response");
 
         jLabel4.setText("Mgt Level");
@@ -119,6 +116,11 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             }
         });
 
+        jLabel6.setText("Timeout");
+
+        jtf_timeout.setText("180");
+        jtf_timeout.setToolTipText("Number of minutes we should allowed to read SMS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,7 +128,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -134,31 +136,32 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(responce_required_checkbox)
-                                .addGap(185, 185, 185)
-                                .addComponent(jb_export_result, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(60, 60, 60)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(jtf_timeout, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jb_export_result, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addComponent(messagCountText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel4))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jb_send)
-                                        .addGap(57, 57, 57)
-                                        .addComponent(jb_clear)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 7, Short.MAX_VALUE)))
+                                .addComponent(responce_required_checkbox)
+                                .addGap(84, 84, 84)
+                                .addComponent(jb_send, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -177,32 +180,56 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 .addGap(22, 22, 22)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtf_timeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(responce_required_checkbox)
-                        .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jb_send)
-                            .addComponent(jb_clear)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jb_send, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                        .addComponent(responce_required_checkbox))
                     .addComponent(jb_export_result, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGap(46, 46, 46)
                 .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
-
+        
+        //Validation for timeout
+        String readTimeout = jtf_timeout.getText();
+        int readTimeoutInt = 0;
+        if (readTimeout == null || readTimeout.equals("")) {            
+            javax.swing.JOptionPane.showMessageDialog(null, "Please enter valid timeout (in minutes).", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            readTimeoutInt = Integer.parseInt(readTimeout);
+        } catch (Exception e) {                
+            javax.swing.JOptionPane.showMessageDialog(null, "Please enter valid number for timeout (in minutes).", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (readTimeoutInt < 1 || readTimeoutInt > 4320) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Please enter valid number for timeout (in minutes) between 1 and 4320(3days).", "Error", JOptionPane.ERROR_MESSAGE);                
+        }
+        
+        //Create session Id        
+        DbOperation dbOperation = new DbOperation();        
+        String latestSessionId = dbOperation.getLatestSessionId();
+        int latestSessionIdInt = Integer.parseInt(latestSessionId);
+        Registry.setSessionId(latestSessionIdInt + 1);
+            
         //log creating part....
         try 
         {
@@ -236,7 +263,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         boolean responseRequired = responce_required_checkbox.isSelected();       
         if(responseRequired)
         {
-            readSms();
+            readSms(readTimeoutInt);
         }
         try 
         {
@@ -247,11 +274,6 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jb_sendActionPerformed
-
-    private void jb_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_clearActionPerformed
-   
-        smsText.setText("");
-    }//GEN-LAST:event_jb_clearActionPerformed
 
     private List<Member> getSelectedMembers() {
         DbOperation dbOperation = new DbOperation();
@@ -311,7 +333,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private void sendSms() {
        //sms sending part...
         try 
-        {   
+        {             
             if (smsText.getText().length() != 0)
             {
 //                String messageStatusSting ="<html><FONT COLOR=RED><B>Message Sending ..... </B></FONT></html>";
@@ -328,7 +350,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 }
                 
                 //TO DO need change the session Id..
-                sessionId = "001";
+                sessionId = Registry.getSessionId() + "";
                 String smsMessage = smsText.getText();
                 
                 //TODO remove this line when going production
@@ -461,12 +483,15 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         }
     }
     
-    private void readSms() {
+    private void readSms(int readTimeoutInt) {
         DbOperation dbOperation = new DbOperation();
         
         //sms reading part...
         try
         {
+            long startedTime = new Date().getTime();
+            int readTimeoutMs = readTimeoutInt * 60 * 1000;
+            long endTime = startedTime + readTimeoutMs;
             GSMConnect gsm = GSMConnect.getInstace();
             gsm.checkStatus();
             Thread.sleep(50000);
@@ -479,7 +504,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             out.write("-------------------------------------Start Message Reading--------------------------------------------");
             out.newLine();
             out.newLine();
-            while(true)
+            while(endTime > new Date().getTime())
             {
                 //TODO how much time we shoud run
                 String tempString = gsm.getoutputString().toString();
@@ -495,6 +520,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                deleteSmsFromSim(messageResultList, gsm);
             }
             
+            //TODO log that we have ended reading for session
 
         } 
         catch (Exception e) 
@@ -545,14 +571,15 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton jb_clear;
     private javax.swing.JButton jb_export_result;
     private javax.swing.JButton jb_send;
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
+    private javax.swing.JTextField jtf_timeout;
     private javax.swing.JTextField messagCountText;
     private javax.swing.JLabel messageSendingStausLabel;
     private javax.swing.JCheckBox responce_required_checkbox;

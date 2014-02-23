@@ -15,6 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
@@ -274,5 +277,38 @@ public class DbOperation {
        return list;
     }
     
-        
+    public String getLatestSessionId() {
+        Session session = null;
+        Transaction tx = null;
+        String latestSessionId = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();   
+            DetachedCriteria maxId = DetachedCriteria.forClass(MessageResult.class)
+                .setProjection( Projections.max("sessionId") );
+            Criteria criteria = session.createCriteria(MessageResult.class);          
+            
+            criteria.setProjection(Projections.max("sessionId"));
+            criteria.add(Property.forName("sessionId").eq(maxId));
+            List list = criteria.add( Property.forName("id").eq(maxId) ).list();
+            latestSessionId = list.get(0).toString();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+//            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return latestSessionId;
+    }    
 }

@@ -17,7 +17,16 @@ import smsims.om.Member;
  * @author Lasith
  */
 public class ValidationUtil {
-     
+    
+    /**
+     * Validate fields for member
+     * 
+     * @param member
+     * @param component
+     * @param isUpdate
+     * @return
+     * @throws Exception 
+     */
     public static boolean validateFields(Member member, Component component, boolean isUpdate) throws Exception {
         boolean isSuccess = true;
         DbOperation dbOperation = new DbOperation();
