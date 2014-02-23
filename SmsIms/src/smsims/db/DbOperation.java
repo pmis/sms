@@ -196,5 +196,37 @@ public class DbOperation {
         }
        return list;
     }
+    
+    public List getSessionMessageResults(String sessionId) {
+        Session session = null;
+        Transaction tx = null;
+        List<MessageResult> list = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();            
+            
+            // Saving to the database
+            Query query = session.createQuery("FROM MessageResult WHERE sessionId = :givenSession ");
+            query.setParameter("givenSession",  sessionId);
+            list = query.list();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+//            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return list;
+    }
         
 }
