@@ -54,11 +54,14 @@ public class NewMember extends javax.swing.JPanel {
         jtf_empCode = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jcb_member_status = new javax.swing.JComboBox();
+        jtf_country_code = new javax.swing.JTextField();
 
         jLabel1.setText("Name");
 
         jLabel2.setLabelFor(jtf_mname);
         jLabel2.setText("Tp number");
+
+        jtf_tpNumber.setToolTipText("Nine digit number, e.g 71XXXXXXX");
 
         jLabel3.setText("Department");
 
@@ -71,7 +74,7 @@ public class NewMember extends javax.swing.JPanel {
 
         jb_clearMember.setText("Clear");
 
-        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Geo-Cycle", "HR" }));
+        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Geo_Cycle", "HR" }));
 
         jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CMB", "Galle" }));
 
@@ -84,6 +87,9 @@ public class NewMember extends javax.swing.JPanel {
         jLabel6.setText("Emp code");
 
         jLabel7.setText("Status");
+
+        jtf_country_code.setText("+94");
+        jtf_country_code.setToolTipText("Country code of telephone number");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,25 +111,26 @@ public class NewMember extends javax.swing.JPanel {
                             .addComponent(jc_mgtLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jtf_empCode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(45, 45, 45)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel7)))
-                                    .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(44, 44, 44)
+                                    .addComponent(jtf_empCode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jc_department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(45, 45, 45)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jcb_member_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel7))
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcb_member_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jtf_country_code, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(63, 63, 63)
                         .addComponent(jb_saveMember)
                         .addGap(42, 42, 42)
                         .addComponent(jb_clearMember)))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,7 +141,9 @@ public class NewMember extends javax.swing.JPanel {
                         .addComponent(jtf_mname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jtf_tpNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jtf_country_code, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel6)
@@ -180,12 +189,19 @@ public class NewMember extends javax.swing.JPanel {
             if(!ValidationUtil.validateFields(member, this, false)) {
                 return;
             }
+            if (jtf_country_code.getText() == null || jtf_country_code.getText().equals("")) {            
+                javax.swing.JOptionPane.showMessageDialog(this, "Please valid country code in the telephone number", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         } catch (Exception ex) {
             Logger.getLogger(NewMember.class.getName()).log(Level.SEVERE, null, ex);
             javax.swing.JOptionPane.showMessageDialog(this, "Member not saved." + ex.getMessage(), "Error", 1);
         }
-        DbOperation dbOperation = new DbOperation();       
-
+        DbOperation dbOperation = new DbOperation(); 
+        
+        //Append country code to tp number
+        member.setTpNumber(jtf_country_code.getText() + member.getTpNumber());
+        
         try {
             dbOperation.insertMember(member);
             javax.swing.JOptionPane.showMessageDialog(this, "Member " + jtf_mname.getText() + "  is saved.", "Alert", 1);
@@ -216,6 +232,7 @@ public class NewMember extends javax.swing.JPanel {
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
     private javax.swing.JComboBox jcb_member_status;
+    private javax.swing.JTextField jtf_country_code;
     private javax.swing.JTextField jtf_empCode;
     private javax.swing.JTextField jtf_mname;
     private javax.swing.JTextField jtf_tpNumber;

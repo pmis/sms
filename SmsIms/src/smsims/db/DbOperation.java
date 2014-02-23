@@ -8,16 +8,20 @@ package smsims.db;
 
 import java.util.List;
 import java.util.Properties;
+import javax.persistence.criteria.Expression;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import smsims.om.Member;
 import smsims.om.MessageResult;
+import smsims.om.TypeUtil;
 
 /**
  *
@@ -165,7 +169,7 @@ public class DbOperation {
         }
     }
     
-    public List getMessageResults(String phoneNumber) {
+    public List getMessageResults(String phoneNumber, String sessionId) {
         Session session = null;
         Transaction tx = null;
         List<MessageResult> list = null;
@@ -175,8 +179,9 @@ public class DbOperation {
             tx = session.beginTransaction();            
             
             // Saving to the database
-            Query query = session.createQuery("FROM MessageResult WHERE phoneNumber = :givenPhNumber ");
+            Query query = session.createQuery("FROM MessageResult WHERE phoneNumber = :givenPhNumber AND sessionId = :givenSession");
             query.setParameter("givenPhNumber",  phoneNumber);
+            query.setParameter("givenSession",  sessionId);
             list = query.list();
              
             // Committing the change in the database.
@@ -227,6 +232,48 @@ public class DbOperation {
             }
         }
        return list;
+    }    
+  
+    public List<Member> getSelectedMembers(String department, String mgtLevel, String site) {
+        Session session = null;
+        Transaction tx = null;
+        List<Member> list = null;
+         
+        try {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();   
+            Criteria criteria = session.createCriteria(Member.class);            
+        
+            if (!TypeUtil.Departmens.All_Departments.toString().equals(department)) {
+                criteria.add(Restrictions.eq("department", department));
+            }
+            if (!TypeUtil.MgtLevels.All_Levels.toString().equals(mgtLevel)) {
+                criteria.add(Restrictions.eq("mgtLevel", mgtLevel));
+            }
+            if (!TypeUtil.Sites.All_Sites.toString().equals(site)) {
+                criteria.add(Restrictions.eq("site", site));
+            }
+            criteria.add(Restrictions.eq("status", "ENABLED"));
+
+            list = criteria.list();
+             
+            // Committing the change in the database.
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+             
+            // Rolling back the changes to make the data consistent in case of any failure 
+            // in between multiple database write operations.
+            tx.rollback();
+//            throw ex;
+        } finally{
+            if(session != null) {
+                session.close();
+            }
+        }
+       return list;
     }
+    
         
 }

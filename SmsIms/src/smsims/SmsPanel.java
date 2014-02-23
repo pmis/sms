@@ -25,6 +25,8 @@ import smsCore.GSMConnect;
 import smsims.om.MessageResult;
 import smsCore.MessageSeperator;
 import smsims.db.DbOperation;
+import smsims.om.Member;
+import smsims.om.TypeUtil;
 
 /**
  *
@@ -78,9 +80,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel3.setText("Site");
 
-        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Departments", "Geo-Cycle", "HR" }));
+        jc_department.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Departments", "Geo_Cycle", "HR" }));
 
-        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Sites", "CMB", "Galle" }));
+        jc_site.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Sites", "CMB", "Galle" }));
 
         jb_send.setText("Send SMS");
         jb_send.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +102,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel4.setText("Mgt Level");
 
-        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All Levels", "FML", "SML", "TML" }));
+        jc_mgtLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All_Levels", "FML", "SML", "TML" }));
 
         jLabel5.setText("Character Count");
 
@@ -191,6 +193,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jb_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_sendActionPerformed
+
         //log creating part....
         try 
         {
@@ -240,7 +243,18 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
    
         smsText.setText("");
     }//GEN-LAST:event_jb_clearActionPerformed
-    
+
+    private List<Member> getSelectedMembers() {
+        DbOperation dbOperation = new DbOperation();
+        
+        String depatment = jc_department.getSelectedItem().toString();
+        String mgtLevel = jc_mgtLevel.getSelectedItem().toString();
+        String site = jc_site.getSelectedItem().toString();
+        boolean isWhereAppended = false;
+        
+        return dbOperation.getSelectedMembers(depatment, mgtLevel, site);
+    }
+        
     private void sendSms() {
        //sms sending part...
         try 
@@ -252,6 +266,10 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                messageSendingStausLabel.setVisible(true);
 //                messageSendingStausLabel.setEnabled(true);
 //                jb_send.setEnabled(false);
+                
+                //Get members list according to the specified conditioned in the UI
+                List<Member> selectedMembers = getSelectedMembers();
+                
                 String smsMessage = smsText.getText();
                 String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
                 //message chracter count less than 155
@@ -447,7 +465,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         for (MessageResult messageResult : messageResultList)
         {
             //Save in the db
-            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber());
+            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber(), "001");
             if (dbPhoneNumList.isEmpty())
             {
                 dbOperation.insertMessageResult(messageResult);

@@ -102,18 +102,18 @@ public class DbOperationTest {
         // TODO review the generated test code and remove the default call to fail.
     }
     
-    //@Test
+    @Test
     public void testGetMessageResults() throws Exception {
         System.out.println("getMessageResults");
         DbOperation instance = new DbOperation();
         List<Member> expResult = null;
-        List<Member> result = instance.getMessageResults("0718604483");
+        List<Member> result = instance.getMessageResults("0718604483", "001");
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
     
-    @Test
+    //@Test
     public void testGetSessionMessageResults() throws Exception {
         System.out.println("getMessageResults");
         DbOperation instance = new DbOperation();

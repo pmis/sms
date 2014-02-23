@@ -151,8 +151,8 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="All Departments"/>
-            <StringItem index="1" value="Geo-Cycle"/>
+            <StringItem index="0" value="All_Departments"/>
+            <StringItem index="1" value="Geo_Cycle"/>
             <StringItem index="2" value="HR"/>
           </StringArray>
         </Property>
@@ -162,7 +162,7 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="All Sites"/>
+            <StringItem index="0" value="All_Sites"/>
             <StringItem index="1" value="CMB"/>
             <StringItem index="2" value="Galle"/>
           </StringArray>
@@ -201,7 +201,7 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
-            <StringItem index="0" value="All Levels"/>
+            <StringItem index="0" value="All_Levels"/>
             <StringItem index="1" value="FML"/>
             <StringItem index="2" value="SML"/>
             <StringItem index="3" value="TML"/>

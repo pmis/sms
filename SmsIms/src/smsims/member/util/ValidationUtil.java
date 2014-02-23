@@ -42,7 +42,7 @@ public class ValidationUtil {
         if (!isUpdate) {
             List<Member> members = dbOperation.getMembersByEmployeeCode(member.getEmpCode());
             if (!members.isEmpty()) {            
-                javax.swing.JOptionPane.showMessageDialog(component, "Member with the givem emp code is exsits", "Error", JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(component, "Member with the given emp code is exsits", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }            
         }
@@ -56,11 +56,11 @@ public class ValidationUtil {
         } catch (NumberFormatException e) {
             isSuccess = false;
         }
-        if (tpNumber.length() != 10){
+        if (tpNumber.length() != 9){
             isSuccess = false;
         }
         if (!isSuccess) {            
-            javax.swing.JOptionPane.showMessageDialog(component, "Please enter valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(component, "Please enter valid phone number with 9 digits", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return isSuccess;
     }
