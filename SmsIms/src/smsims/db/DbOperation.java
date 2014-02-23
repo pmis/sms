@@ -176,7 +176,7 @@ public class DbOperation {
             
             // Saving to the database
             Query query = session.createQuery("FROM MessageResult WHERE phoneNumber = :givenPhNumber ");
-            query.setParameter("givenPhNumber",  phoneNumber + "%" );
+            query.setParameter("givenPhNumber",  phoneNumber);
             list = query.list();
              
             // Committing the change in the database.
