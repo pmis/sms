@@ -33,16 +33,14 @@ public class MessageSeperator {
             if (count !=0 ){
                 
                 String messageResultArray [] = aMessage.split(",");
-                for (String me : messageResultArray)
-                {
-                    System.out.println("Result Array....."+me);
-                }
-                if (messageResultArray.length >= 6)
+                String phoneNum = messageResultArray[2].substring(1, messageResultArray[2].length()-1);
+                boolean correctPhoneNum = phoneNumValidation(phoneNum);
+                if (messageResultArray.length >= 6 && correctPhoneNum)
                 {
                     MessageResult messageResult = new MessageResult();
                     messageResult.setIndex(messageResultArray[0]);
                     messageResult.setMessageStatus(messageResultArray[1]);
-                    messageResult.setPhoneNumber(messageResultArray[2]);
+                    messageResult.setPhoneNumber(phoneNum);
                     messageResult.setSenderDate(messageResultArray[4].substring(1));
                     messageResult.setSmsContent(messageResultArray[5].substring(12));
                     messageResulList.add(messageResult);   
@@ -53,6 +51,22 @@ public class MessageSeperator {
         }
         
         return messageResulList;
+    }
+
+    private boolean phoneNumValidation(String phoneNum) {
+        
+        if (phoneNum.startsWith("+94") && phoneNum.length() == 12 )
+        {
+             return true;
+        }
+        else if (phoneNum.startsWith("0") && phoneNum.length() == 10) 
+        {
+             return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     
