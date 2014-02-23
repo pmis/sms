@@ -305,6 +305,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 //                messageSendingStausLabel.setVisible(true);
 //                messageSendingStausLabel.setEnabled(true);
 //                jb_send.setEnabled(false);
+                //TO DO need change the session Id..
+                sessionId = "001";
                 String smsMessage = smsText.getText();
                 String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
                 //message chracter count less than 155
@@ -460,7 +462,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 Thread.sleep(20000);
                 String afterReadingSms = gsm.getoutputString().toString();
                 String allMessageString = afterReadingSms.substring(tempString.length());
-                MessageSeperator me = new MessageSeperator(allMessageString) ;
+                MessageSeperator me = new MessageSeperator(allMessageString,sessionId) ;
                 List<MessageResult> messageResultList = me.getSeperatedMessage();
                 
                 smsSaveInDb(messageResultList, dbOperation);
@@ -488,10 +490,11 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         }   
     }
 
-    private void deleteSmsFromSim(List<MessageResult> messageResultList, GSMConnect gsm) {
+    private void deleteSmsFromSim(List<MessageResult> messageResultList, GSMConnect gsm) throws InterruptedException {
         for (MessageResult messageResult : messageResultList)
         {
             gsm.deleteASMS(messageResult.getIndex());
+            Thread.sleep(2000);
         }
     }
 
@@ -531,6 +534,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JTextArea smsText;
     // End of variables declaration//GEN-END:variables
     private static BufferedWriter out;
+    private String sessionId;
 
     public static BufferedWriter getLog() 
     {
