@@ -42,8 +42,9 @@ public class MessageSeperator {
                     messageResult.setMessageStatus(messageResultArray[1]);
                     messageResult.setPhoneNumber(phoneNum);
                     messageResult.setSenderDate(messageResultArray[4].substring(1));
-                    messageResult.setSmsContent(messageResultArray[5].substring(12));
-                    messageResulList.add(messageResult);   
+                    messageResult.setSmsContent(messageResultArray[5].substring(12).trim());
+                    messageResulList.add(messageResult); 
+                    System.out.println("Added Successfully \n "+messageResult.toString());
                 }
                 
             }
