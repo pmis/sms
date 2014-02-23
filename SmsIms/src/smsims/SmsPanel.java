@@ -66,6 +66,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         jLabel5 = new javax.swing.JLabel();
         messagCountText = new javax.swing.JTextField();
         messageSendingStausLabel = new javax.swing.JLabel();
+        jb_export_result = new javax.swing.JButton();
 
         smsText.setColumns(20);
         smsText.setRows(5);
@@ -105,6 +106,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         messagCountText.setEditable(false);
 
+        jb_export_result.setText("Export results");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,7 +123,10 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(responce_required_checkbox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(responce_required_checkbox)
+                                .addGap(185, 185, 185)
+                                .addComponent(jb_export_result, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,11 +176,14 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                     .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
-                .addComponent(responce_required_checkbox)
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jb_send)
-                    .addComponent(jb_clear))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(responce_required_checkbox)
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jb_send)
+                            .addComponent(jb_clear)))
+                    .addComponent(jb_export_result, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(52, Short.MAX_VALUE))
@@ -458,6 +467,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton jb_clear;
+    private javax.swing.JButton jb_export_result;
     private javax.swing.JButton jb_send;
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
