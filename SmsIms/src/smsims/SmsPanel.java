@@ -319,12 +319,20 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         if (file != null)
         {
             DbOperation db = new DbOperation();
-            List<MessageResult> sessionMessageResults = db.getSessionMessageResults("001");
-        
-            for (MessageResult msgResult : sessionMessageResults)
+            if (sessionId != null)
             {
-                file.write(msgResult.printCSV());
+                List<MessageResult> sessionMessageResults = db.getSessionMessageResults(sessionId);
+        
+                for (MessageResult msgResult : sessionMessageResults)
+                {
+                    file.write(msgResult.printCSV());
+                }   
             }
+            else
+            {
+                file.write("session id is null");
+            }
+            
         
             file.close();   
         }
@@ -586,7 +594,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JTextArea smsText;
     // End of variables declaration//GEN-END:variables
     private static BufferedWriter out;
-    private String sessionId;
+    private String sessionId = null;
 
     public static BufferedWriter getLog() 
     {
