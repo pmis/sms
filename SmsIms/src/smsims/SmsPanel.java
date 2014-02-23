@@ -23,7 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import smsCore.GSMConnect;
@@ -45,6 +47,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
      */
     public SmsPanel() {
         initComponents();
+        jLabel9.setIcon(null);
         smsText.getDocument().addDocumentListener(this);
         messageSendingStausLabel.setVisible(false);
     }
@@ -78,6 +81,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         jtf_timeout = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jl_status = new javax.swing.JLabel();
 
         smsText.setColumns(20);
         smsText.setRows(5);
@@ -127,6 +132,8 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
 
         jLabel8.setText("Please type the SMS message here");
 
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/loading1.gif"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,8 +147,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(54, 54, 54)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jl_status, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jc_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
@@ -159,8 +167,10 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                                             .addComponent(jb_export_result, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addComponent(messageSendingStausLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(responce_required_checkbox)
-                                        .addGap(84, 84, 84)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(responce_required_checkbox)
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(44, 44, 44)
                                         .addComponent(jb_send, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -213,7 +223,13 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(responce_required_checkbox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(responce_required_checkbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jl_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jb_export_result, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                     .addComponent(jb_send, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -278,13 +294,42 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             }
             System.out.println("Cannot find the log file location");
         }
+        
+        final int timeOutFinal = readTimeoutInt;
+        final boolean responseRequired = responce_required_checkbox.isSelected(); 
+        
+        //Since we need a responsive UI while sending and reading SMS start it with SwingWorker
+        SwingWorker<Void, Void> smsWorker = new SwingWorker<Void, Void>() {
 
-        sendSms();       
-        boolean responseRequired = responce_required_checkbox.isSelected();       
-        if(responseRequired)
-        {
-            readSms(readTimeoutInt);
-        }
+            @Override
+            protected Void doInBackground() throws Exception {
+                //Progress UI relaed stuffs
+                jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/loading1.gif")));
+                jl_status.setText("Sending SMS");
+                JLabel jl_progress = Registry.getJl_progress();
+                jl_progress.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/loading2_1.gif")));
+                
+                setProgress(1);             
+                sendSms();
+                setProgress(10);
+                        
+                if(responseRequired) {
+                    jl_status.setText("Receiving SMS");
+                    jl_progress.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/loading2.gif")));
+                    readSms(timeOutFinal);                  
+                }
+                setProgress(100);
+                jl_status.setText("Completed");
+                jLabel9.setIcon(null);
+                jl_progress.setIcon(null);
+                return null;
+            }
+
+        };
+        smsWorker.execute(); 
+        
+      
+
         try 
         {
             out.close();
@@ -602,6 +647,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton jb_export_result;
@@ -609,6 +655,7 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
     private javax.swing.JComboBox jc_department;
     private javax.swing.JComboBox jc_mgtLevel;
     private javax.swing.JComboBox jc_site;
+    private javax.swing.JLabel jl_status;
     private javax.swing.JTextField jtf_timeout;
     private javax.swing.JTextField messagCountText;
     private javax.swing.JLabel messageSendingStausLabel;
