@@ -101,7 +101,18 @@ public class MessageResult {
         return sb.toString();
         
     }
-   
+    
+    public String printCSV()
+    {
+       StringBuilder sb = new StringBuilder();
+        sb.append(messageIndex+",");
+        sb.append(phoneNumber+",");
+        sb.append(smsContent+",");
+        sb.append(senderDate+",");
+        sb.append("\n");
+        
+        return sb.toString(); 
+    }
    
    
     

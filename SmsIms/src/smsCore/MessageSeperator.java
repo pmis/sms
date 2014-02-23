@@ -42,7 +42,15 @@ public class MessageSeperator {
                     messageResult.setMessageStatus(messageResultArray[1]);
                     messageResult.setPhoneNumber(phoneNum);
                     messageResult.setSenderDate(messageResultArray[4].substring(1));
-                    messageResult.setSmsContent(messageResultArray[5].substring(12).trim());
+                    String smsContent = messageResultArray[5].substring(12).trim();
+                    if (smsContent.endsWith("OK"))
+                    {
+                        messageResult.setSmsContent(smsContent.substring(0,smsContent.length()-2));
+                    }
+                    else
+                    {
+                        messageResult.setSmsContent(smsContent);
+                    }
                     messageResulList.add(messageResult); 
                     System.out.println("Added Successfully \n "+messageResult.toString());
                 }

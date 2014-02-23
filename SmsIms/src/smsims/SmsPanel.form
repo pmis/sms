@@ -225,6 +225,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Export results"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jb_export_resultActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

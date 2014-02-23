@@ -7,6 +7,8 @@
 package smsims;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.comm.CommDriver;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -107,6 +110,11 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         messagCountText.setEditable(false);
 
         jb_export_result.setText("Export results");
+        jb_export_result.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_export_resultActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -240,7 +248,52 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
    
         smsText.setText("");
     }//GEN-LAST:event_jb_clearActionPerformed
+
+    private File getSaveLocation()
+    {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);  
+        int result = chooser.showSaveDialog(this);
+        if (result == chooser.APPROVE_OPTION) 
+        { 
+            return chooser.getSelectedFile();
+        } 
+        else 
+        {
+            return null;
+        }
+    }
     
+    private void jb_export_resultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_export_resultActionPerformed
+        
+       
+        PrintWriter file = null;
+        try 
+        {   
+            File fileDirectory = getSaveLocation();
+            if (fileDirectory != null)
+            {   
+                file = new PrintWriter(new File(fileDirectory,"sms_response.csv"));
+            }
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            ex.printStackTrace();
+        }
+        if (file != null)
+        {
+            DbOperation db = new DbOperation();
+            List<MessageResult> sessionMessageResults = db.getSessionMessageResults("001");
+        
+            for (MessageResult msgResult : sessionMessageResults)
+            {
+                file.write(msgResult.printCSV());
+            }
+        
+            file.close();   
+        }
+    }//GEN-LAST:event_jb_export_resultActionPerformed
+   
     private void sendSms() {
        //sms sending part...
         try 
