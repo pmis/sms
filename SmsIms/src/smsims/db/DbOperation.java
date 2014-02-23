@@ -277,6 +277,11 @@ public class DbOperation {
        return list;
     }
     
+    /**
+     * Returns the latest session ID. If there are no records returns null.
+     * 
+     * @return 
+     */
     public String getLatestSessionId() {
         Session session = null;
         Transaction tx = null;
@@ -291,8 +296,10 @@ public class DbOperation {
             
             criteria.setProjection(Projections.max("sessionId"));
             criteria.add(Property.forName("sessionId").eq(maxId));
-            List list = criteria.add( Property.forName("id").eq(maxId) ).list();
-            latestSessionId = list.get(0).toString();
+            List list = criteria.add( Property.forName("sessionId").eq(maxId) ).list();
+            if (list.size() > 0 && list.get(0) != null) {
+                latestSessionId = list.get(0).toString();                
+            }
              
             // Committing the change in the database.
             session.flush();

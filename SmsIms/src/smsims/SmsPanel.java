@@ -227,6 +227,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         //Create session Id        
         DbOperation dbOperation = new DbOperation();        
         String latestSessionId = dbOperation.getLatestSessionId();
+        if (latestSessionId == null) {
+          latestSessionId = "0";  
+        }
         int latestSessionIdInt = Integer.parseInt(latestSessionId);
         Registry.setSessionId(latestSessionIdInt + 1);
             
