@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -258,7 +259,6 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
         String depatment = jc_department.getSelectedItem().toString();
         String mgtLevel = jc_mgtLevel.getSelectedItem().toString();
         String site = jc_site.getSelectedItem().toString();
-        boolean isWhereAppended = false;
         
         return dbOperation.getSelectedMembers(depatment, mgtLevel, site);
     }
@@ -322,11 +322,18 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 
                 //Get members list according to the specified conditioned in the UI
                 List<Member> selectedMembers = getSelectedMembers();
-				
+                List<String> phoneNumbers = new ArrayList<String>();
+                for (Member member : selectedMembers) {
+                    phoneNumbers.add(member.getTpNumber());
+                }
+                
                 //TO DO need change the session Id..
                 sessionId = "001";
                 String smsMessage = smsText.getText();
-                String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
+                
+                //TODO remove this line when going production
+                //String[] phoneNumbers = {"+94788370502","+94711498462","+94719028959"};
+                
                 //message chracter count less than 155
                 String normalMessage ="";
                 //message character count between 155 and 310

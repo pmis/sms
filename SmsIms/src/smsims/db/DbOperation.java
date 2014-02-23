@@ -8,7 +8,6 @@ package smsims.db;
 
 import java.util.List;
 import java.util.Properties;
-import javax.persistence.criteria.Expression;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
