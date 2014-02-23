@@ -396,18 +396,9 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
                 MessageSeperator me = new MessageSeperator(allMessageString) ;
                 List<MessageResult> messageResultList = me.getSeperatedMessage();
                 
-                //TODO save messageResultList in db
-                for (MessageResult messageResult : messageResultList)
-                {
-                    //Save in the db
-                    dbOperation.insertMessageResult(messageResult);
-                    
-                    System.out.println(messageResult.toString());
-                }
-                for (MessageResult messageResult : messageResultList)
-                {
-                    gsm.deleteASMS(messageResult.getIndex());
-                }
+                smsSaveInDb(messageResultList, dbOperation);
+                
+                deleteSmsFromSim(messageResultList, gsm);
             }
 
         } 
@@ -427,6 +418,27 @@ public class SmsPanel extends javax.swing.JPanel implements DocumentListener{
             }
                 
         }   
+    }
+
+    private void deleteSmsFromSim(List<MessageResult> messageResultList, GSMConnect gsm) {
+        for (MessageResult messageResult : messageResultList)
+        {
+            gsm.deleteASMS(messageResult.getIndex());
+        }
+    }
+
+    private void smsSaveInDb(List<MessageResult> messageResultList, DbOperation dbOperation) throws Exception {
+        //TODO save messageResultList in db
+        for (MessageResult messageResult : messageResultList)
+        {
+            //Save in the db
+            List dbPhoneNumList = dbOperation.getMessageResults(messageResult.getPhoneNumber());
+            if (dbPhoneNumList.isEmpty())
+            {
+                dbOperation.insertMessageResult(messageResult);
+                System.out.println(messageResult.toString());
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
